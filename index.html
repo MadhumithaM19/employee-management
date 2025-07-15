@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Search & Pagination</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">  <link rel="stylesheet" href="style.css">
+  <style>
+    
+  </style>
+</head>
+<body>
+
+  <h2 id="demo" class="m-5"> Employee Management System</h2>
+  <input type="text" class="ml-5" id="search" >
+  <div class="flex m-5 button-flex">
+         
+    <button type="button" class="btn btn-success" style="border-color:6px black;" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Add</button>
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Employee Details</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       
+          
+            <label for="recipient-name" class="col-form-label">Name</label>
+            <input type="text" class="form-control" id="name">
+            <label for="message-text" class="col-form-label">Email</label>
+            <input type="email" class="form-control" id="email"></input>
+            <label for="message-text" class="col-form-label">Phonenumber</label>
+            <input type="number" class="form-control" id="phoneNumber"></input>
+            <label for="message-text" class="col-form-label">Department</label>
+            <input type="text" class="form-control" id="department"></input>
+            <label for="message-text" class="col-form-label">Role</label>
+            <input type="text" class="form-control" id="role"></input>
+          
+          <div id="error"></div>
+          
+     
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="modalClose()" aria-hidden="true">Close</button>
+        <button type="button" class="btn btn-primary" onclick="modalOk()">Ok</button>
+      </div>
+    </div>
+  </div>
+</div>
+    <button id="save-button" class="btn btn-primary" style="background-color: blue;border-radius: 4px;padding: 6px;color: aliceblue;" onclick="saveDetails()">Save</button>
+  </div>
+  <table class="table m-3" style="border: 2px;">
+    <thead>
+      <tr>
+       <th>Name</th>
+       <th>Email</th>
+       <th>Phone</th>
+       <th>Department</th>
+       <th>Role</th>
+       <th>Joining Date</th>
+       <th>Actions</th>
+      </tr>
+    </thead>
+      <tbody id="tableVal">
+        
+      </tbody>
+    
+  </table>
+  <div class="d-flex justify-content-center pages">
+    <button onclick="prevPage()" id="prev" class="btn mr-2 ">Prev</button>
+    <button onclick="nextPage()" id="next" class="btn ml-2 ">Next</button>
+    <span id="pageNum"></span>
+  </div>
+
+   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <script src="script.js"></script>
+</body>
+</html>

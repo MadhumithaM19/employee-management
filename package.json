@@ -1,0 +1,19 @@
+{
+  "name": "handson",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "index.html",
+    "build": "build index.html"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/material": "^7.2.0"
+  },
+  "devDependencies": {},
+  "keywords": [],
+  "description": ""
+}
