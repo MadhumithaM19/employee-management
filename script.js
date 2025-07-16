@@ -173,16 +173,125 @@ let role = document.getElementById('role');
 let error = document.getElementById('Error');
 let tableBody = document.getElementById('tableVal');
 let pageNumber = document.getElementById('pageNum');
-let search = document.getElementById('search');
+let searchInput = document.getElementById('searchInput');
 let prev = document.getElementById('prev');
 let next = document.getElementById('next');
+let input;
 
-search.addEventListener("search", (e) =>{
-  let input = e.target.value;
-  modalTable(currentPage);
-})
+console.log("GLOBAL INPUT",input);
+// function handleInput() {
+//   let input = document.getElementById('searchInput').value.toLowerCase();
+//   console.log("typed:", input);
+
+//   let filtered = employees.filter(emp => 
+//     emp.Name.toLowerCase().includes(input) || 
+//     emp.Email.toLowerCase().includes(input) ||
+//     emp.Phone.toLowerCase().includes(input) ||
+//     emp.Department.toLowerCase().includes(input) ||
+//     emp.Role.toLowerCase().includes(input)
+//   );
+
+//   renderTable(filtered);
+// }
+
+// function renderTable(data) {
+//   tableBody.innerHTML = '';
+//   data.forEach((emp, index) => {
+//     tableBody.innerHTML += `
+//       <tr>
+//         <td>${emp.Name}</td>
+//         <td>${emp.Email}</td>
+//         <td>${emp.Phone}</td>
+//         <td>${emp.Department}</td>
+//         <td>${emp.Role}</td>
+//         <td>${emp.Date}</td>
+//         <td>
+//           <button style="background-color:orange" onclick="editDetails(${index})" data-toggle="modal" data-target="#employeeModal">Edit</button>
+//           <button id="delete" style="background-color:red" onclick="deleteDetails(${index})">Delete</button>
+//         </td>
+//       </tr>`;
+//   });
+//   pageNumber.textContent = `Showing ${data.length} employee(s)`;
+// }
+
+// if(input===""){
+//   modalTable(currentPage);
+//   return;
+// }
+
+// searchInput.oninput = ()=>modalTable(currentPage);
+// document.addEventListener("DOMContentLoaded",() =>{
+//   document.querySelector(".search-input").(inputfield =>{
+//     const tabrow = inputfield.closest("table").querySelector("tbody","tr");
+//   })
+// })
+
+// function handleInput(){
+//   let input = document.getElementById('searchInput').value;
+//   console.log("typed",input);
+//   if(input===""){
+//     modalTable(currentPage);
+//     return;
+//   }
+
+//   let filtered = employees.filter(emp => 
+//     emp.Name.toLowerCase().includes(input) || 
+//     emp.Email.toLowerCase().includes(input) ||
+//     emp.Phone.toLowerCase().includes(input) ||
+//     emp.Department.toLowerCase().includes(input) ||
+//     emp.Role.toLowerCase().includes(input)
+//   );
+//   console.log("filtered employee",filtered);
+  
+//   filtered.map((emp,index)=>{
+    
+//     console.log("searching details",emp);
+//     tableBody.innerHTML = `
+//       <tr>
+//         <td>${emp.Name}</td>
+//         <td>${emp.Email}</td>
+//         <td>${emp.Phone}</td>
+//         <td>${emp.Department}</td>
+//         <td>${emp.Role}</td>
+//         <td>${emp.Date}</td>
+//         <td>
+//           <button style="background-color:orange" onclick="editDetails(${index})" data-toggle="modal" data-target="#employeeModal">Edit</button>
+//           <button id="delete" style="background-color:red" onclick="deleteDetails(${index})">Delete</button>
+//         </td>
+//       </tr>`;
+  
+
+//   })
+
+
+// }
+
+function handleInput(){
+input = document.getElementById('searchInput').value;
+  console.log("INPUTS=====",input);
+  if(input===""){
+    modalTable(currentPage);
+    return;
+  }
+  let newArr = [];
+  employees.map((detail,index) => {
+   if (detail.Name.toLowerCase().includes(input)) {
+    
+    newArr.push(detail);
+    
+    console.log(detail);
+    console.log("pushed array",newArr);
+    
+       modalTable(newArr);
+
+  }
+});
+
+}
+
 
 let employees = JSON.parse(localStorage.getItem("employees")) || [];
+console.log("employee type :",typeof(employees));
 let currentPage = 1;
 const rowPage = 5;
 
@@ -215,6 +324,7 @@ function modalOk() {
   }
 
   localStorage.setItem("employees", JSON.stringify(employees));
+  console.log(employees);
   $('#employeeModal').modal('hide');
   clearForm();
   modalTable(currentPage);
@@ -230,6 +340,7 @@ function clearForm() {
 }
 
 function modalTable(page) {
+  console.log("table input---",input);
   let filtered = [... employees];
   let totalPages = Math.ceil(filtered.length / rowPage);
   if (page > totalPages) {
@@ -238,9 +349,39 @@ function modalTable(page) {
 
   let start = (currentPage - 1) * rowPage;
   let end = start + rowPage;
-
   tableBody.innerHTML = '';
-  filtered.slice(start, end).forEach((emp, index) => {
+  console.log("in input---",input);
+  
+  if(input){
+    employees.map((val,index)=>{
+     if(val.Name.toLowerCase().includes(input)){
+
+    tableBody.innerHTML+=`
+      <tr>
+        <td>${val.Name}</td>
+        <td>${val.Email}</td>
+        <td>${val.Phone}</td>
+        <td>${val.Department}</td>
+        <td>${val.Role}</td>
+        <td>${val.Date}</td>
+        <td>
+          <button style="background-color:orange" onclick="editDetails(${index})" data-toggle="modal" data-target="#employeeModal">Edit</button>
+          <button id="delete" style="background-color:red" onclick="deleteDetails(${index})">Delete</button>
+        </td>
+      </tr>
+      `
+
+     }
+    })
+      
+    
+      
+  }
+  
+
+  else{
+
+    filtered.slice(start, end).forEach((emp, index) => {
     tableBody.innerHTML += `
       <tr>
         <td>${emp.Name}</td>
@@ -257,6 +398,8 @@ function modalTable(page) {
   });
 
   pageNumber.textContent = `Page ${currentPage} of ${totalPages}`;
+  }
+  
   
 }
 
