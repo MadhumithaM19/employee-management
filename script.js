@@ -1,18 +1,18 @@
 
 
-function multiply() {
-  let a = 1;
-  let b = 9;
+// function multiply() {
+//   let a = 1;
+//   let b = 9;
 
-  if (isNaN(a) || isNaN(b)) {
-    console.log(isNaN(b));
+//   if (isNaN(a) || isNaN(b)) {
+//     console.log(isNaN(b));
     
-  }
+//   }
 
-  let result = a * b;
-  console.log(result.toFixed(2));
-}
-multiply();
+//   let result = a * b;
+//   console.log(result.toFixed(2));
+// }
+// multiply();
 
 // // Model
 // const model = {
@@ -177,108 +177,131 @@ let search = document.getElementById('search');
 let prev = document.getElementById('prev');
 let next = document.getElementById('next');
 
-
-  let employees = [];
-function modalOk(){
-let empName = empname.value.trim();
-let empEmail = email.value.trim();
-let empPhone = phone.value.trim();
-let empDept = department.value.trim();
-let empRole= role.value.trim();
-let empDate = new Date().toDateString();
-  if((empName ==="") && (empEmail === "") && (empPhone === "") && (empDept === "") && (empRole=== "")){
-    
-    error.textContent ="Enter all inputs";
-    return;
-
-  }
-
-   let employee = {
-    Name:empName,
-    Email:empEmail,
-    Phone:empPhone,
-    Department:empDept,
-    Role:empRole,
-    Date:empDate,
-  }
-  employees.push(employee);
-  console.log("emp details:",employee);
-  modalTable();
-
-  empname.value ="";
-  email.value="";
-  phone.value="";
-  department.value ="";
-  role.value = "";
-
-}
-function modalTable(page){
-  tableBody.innerHTML="";
-  let startVal = (page-1)*rowPage;
-  let endVal = startVal + rowPage;
-
-  const row = document.createElement('tr');
-  employees.map((emp,index)=>{
-  row.innerHTML = `  
-    <td>${emp.Name}</td>
-    <td>${emp.Email}</td>
-    <td>${emp.Phone}</td>
-    <td>${emp.Department}</td>
-    <td>${emp.Role}</td>
-    <td>${emp.Date}</td>
-    <td><button style="background-color:orange"  onclick=editDetails(${index})>Edit</button>  <button id="delete" style="background-color:red" onclick=deleteDetails(${index})>Delete</button></td>
-  `
+search.addEventListener("search", (e) =>{
+  let input = e.target.value;
+  modalTable(currentPage);
 })
-  tableBody.appendChild(row);
-  pageNumber.innerHTML = "page",currentPage,"of",totalPages;
-  prev.ariaDisabled = (currentPage===1);
-  next.ariaDisabled = (currentPage === totalPages);
 
-}
-
-function addDetails(){
-
-}
-function saveDetails(){
-  localStorage.setItem("employee details",JSON.stringify(employees));
-  console.log("saved Items",localStorage.getItem("employee details"));
-}
-  
-function editDetails(val){
-  let emp = employees[val];
-  empname.value= emp.Name,
-  email.value= emp.Email,
-  phone.value= emp.Phone,
-  department.value= emp.Department,
-  role.value= emp.Role
-}
-
-function deleteDetails(val){
- 
-  employees.splice(val,1);
-  console.log("deleted detail",employees);
-  
-}
-
-let employeeData = [...employees];
-const rowPage = 5;
+let employees = JSON.parse(localStorage.getItem("employees")) || [];
 let currentPage = 1;
-const totalPages = Math.ceil(employeeData.length/rowPage);
+const rowPage = 5;
 
+function modalOk() {
+  let empName = empname.value.trim();
+  let empEmail = email.value.trim();
+  let empPhone = phone.value.trim();
+  let empDept = department.value.trim();
+  let empRole = role.value.trim();
+  let empDate = new Date().toLocaleDateString();
+  let editIndex = document.getElementById('editIndex').value;
 
-function prevPage(){
-  if(currentPage > 1){
+  if (empName ==="" || empEmail==="" || empPhone==="" || empDept==="" || empRole ==="") {
+    error.textContent = "Enter all inputs";
+    return;
+  }
+
+  let employee = { Name: empName,
+     Email: empEmail,
+      Phone: empPhone,
+       Department: empDept,
+        Role: empRole, 
+        Date: empDate
+       };
+
+  if (editIndex === "") {
+    employees.push(employee);
+  } else {
+    employees[editIndex] = employee;
+  }
+
+  localStorage.setItem("employees", JSON.stringify(employees));
+  $('#employeeModal').modal('hide');
+  clearForm();
+  modalTable(currentPage);
+}
+
+function clearForm() {
+  empname.value = "";
+  email.value = "";
+  phone.value = "";
+  department.value = ""; 
+  role.value = "";
+  error.textContent = '';
+}
+
+function modalTable(page) {
+  let filtered = [... employees];
+  let totalPages = Math.ceil(filtered.length / rowPage);
+  if (page > totalPages) {
+    currentPage = totalPages;
+  }
+
+  let start = (currentPage - 1) * rowPage;
+  let end = start + rowPage;
+
+  tableBody.innerHTML = '';
+  filtered.slice(start, end).forEach((emp, index) => {
+    tableBody.innerHTML += `
+      <tr>
+        <td>${emp.Name}</td>
+        <td>${emp.Email}</td>
+        <td>${emp.Phone}</td>
+        <td>${emp.Department}</td>
+        <td>${emp.Role}</td>
+        <td>${emp.Date}</td>
+        <td>
+          <button style="background-color:orange" onclick="editDetails(${index})" data-toggle="modal" data-target="#employeeModal">Edit</button>
+          <button id="delete" style="background-color:red" onclick="deleteDetails(${index})">Delete</button>
+        </td>
+      </tr>`;
+  });
+
+  pageNumber.textContent = `Page ${currentPage} of ${totalPages}`;
+  
+}
+
+function editDetails(index) {
+  let emp = employees[index];
+  empname.value = emp.Name;
+  email.value = emp.Email;
+  phone.value = emp.Phone;
+  department.value = emp.Department;
+  role.value = emp.Role;
+  document.getElementById('editIndex').value = index;
+}
+
+function deleteDetails(index) {
+  
+    employees.splice(index, 1);
+    localStorage.setItem("employees", JSON.stringify(employees));
+    console.log("deleted details",localStorage.getItem("employees"));
+    modalTable(currentPage);
+
+}
+
+function saveDetails() {
+  localStorage.setItem("employees", JSON.stringify(employees));
+  console.log("saved details", localStorage.getItem("employees"));
+}
+
+function prevPage() {
+  if (currentPage > 1) {
     currentPage--;
     modalTable(currentPage);
   }
 }
-function nextPage(){
-  if(currentPage < totalPages){
+
+function nextPage() {
+  let totalPages = Math.ceil(employees.length / rowPage);
+  if (currentPage < totalPages) {
     currentPage++;
     modalTable(currentPage);
   }
 }
+
 modalTable(currentPage);
+
+
 
 
 
