@@ -275,7 +275,11 @@ input = document.getElementById('searchInput').value;
   }
   let newArr = [];
   employees.map((detail,index) => {
-   if (detail.Name.toLowerCase().includes(input)) {
+   if ((detail.Name.toLowerCase().includes(input.toLowerCase()))||
+   (detail.Email.toLowerCase().includes(input.toLowerCase()))||
+   (detail.Department.toLowerCase().includes(input.toLowerCase()))
+  
+  ) {
     
     newArr.push(detail);
     
@@ -306,6 +310,11 @@ function modalOk() {
 
   if (empName ==="" || empEmail==="" || empPhone==="" || empDept==="" || empRole ==="") {
     error.textContent = "Enter all inputs";
+    return;
+  }
+  
+  if((empPhone.length>10) || isNaN(empPhone)){
+    error.textContent="Enter 10 digits";
     return;
   }
 
@@ -354,7 +363,9 @@ function modalTable(page) {
   
   if(input){
     employees.map((val,index)=>{
-     if(val.Name.toLowerCase().includes(input)){
+     if((val.Name.toLowerCase().includes(input.toLowerCase()))||
+     (val.Email.toLowerCase().includes(input.toLowerCase()))||
+     (val.Department.toLowerCase().includes(input.toLowerCase()))){
 
     tableBody.innerHTML+=`
       <tr>
@@ -414,8 +425,9 @@ function editDetails(index) {
 }
 
 function deleteDetails(index) {
-  
-    employees.splice(index, 1);
+    
+     let delRecIndex = index+(currentPage-1)*5;
+    employees.splice(delRecIndex, 1);
     localStorage.setItem("employees", JSON.stringify(employees));
     console.log("deleted details",localStorage.getItem("employees"));
     modalTable(currentPage);
